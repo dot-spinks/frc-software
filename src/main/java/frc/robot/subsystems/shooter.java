@@ -81,3 +81,4 @@ public class shooter {
         rightShooterMotor.setControl(new Follower(leftMotor.getDeviceID(), true));
         leftShooterMotor.setControl(shootRequestVoltage.withOutput(voltage));
 }
+}

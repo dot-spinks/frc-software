@@ -20,6 +20,7 @@ public class Intake extends SubsystemBase {
     public Intake() {
         intakeMotor = new TalonFX(Constants.canIDConstants.intakeMotor, "canivore");
         intakeRequest = new VoltageOut(0).withEnableFOC(true);
+        
         current = intakeMotor.getStatorCurrent();
         temp = intakeMotor.getDeviceTemp();
         RPS = intakeMotor.getRotorVelocity();
