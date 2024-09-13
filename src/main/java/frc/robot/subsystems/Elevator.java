@@ -80,7 +80,5 @@ SmartDashboard.putNumber("Elevator Position", position1.getValue());
     
 }
 
-public boolean atSetPoint(){
- 
-}
+
     }   

@@ -14,6 +14,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.Conversions;
 
 //(two motors, set as follower, motionmagic velocity voltage req)
 public class shooter {
@@ -29,11 +30,13 @@ public class shooter {
     private VelocityVoltage rightRequestVelocity = new VelocityVoltage(0).withEnableFOC(true);
 
     public shooter(){
+
+
     var leftMotorConfigs = new TalonFXConfiguration();
     leftMotorConfigs.CurrentLimits.StatorCurrentLimit = Constants.shooterConstants.statorCurrentLimit;
     leftMotorConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
     leftMotorConfigs.MotorOutput.Inverted = //idk
-    leftMotorConfigs.Slot0.kP = Constants.shooterConstants.kP;
+    leftMotorConfigs.Slot0.kP = 0.068419; //what
     leftMotorConfigs.Slot0.kI = 0.0;
     leftMotorConfigs.Slot0.kD = Constants.shooterConstants.kD;
     leftMotorConfigs.Slot0.kS = Constants.shooterConstants.kS;
@@ -44,7 +47,7 @@ public class shooter {
     rightMotorConfigs.CurrentLimits.StatorCurrentLimit = Constants.shooterConstants.statorCurrentLimit;
     rightMotorConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
     rightMotorConfigs.MotorOutput.Inverted = //idk
-    rightMotorConfigs.Slot0.kP = Constants.shooterConstants.kP;
+    rightMotorConfigs.Slot0.kP = 0.068419;
     rightMotorConfigs.Slot0.kI = 0.0;
     rightMotorConfigs.Slot0.kD = Constants.shooterConstants.kD;
     rightMotorConfigs.Slot0.kS = Constants.shooterConstants.kS;
@@ -53,7 +56,7 @@ public class shooter {
 
     leftShooterMotor.getConfigurator().apply(leftMotorConfigs);
     rightShooterMotor.getConfigurator().apply(rightMotorConfigs);
-    rightShooterMotor.setControl(new Follower(leftShooterMotor.getDeviceID, true));
+    rightShooterMotor.setControl(new Follower(leftShooterMotor.getDeviceID(), true));
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         50,
@@ -66,11 +69,10 @@ public class shooter {
     }
 
     public void periodic(){
-      BaseStatusSignal.refreshAll(current1, temp1, RPS1, position1);
-        SmartDashboard.putNumber("Elevator Position", position1.getValue());
-        SmartDashboard.putNumber("Elevator Current", current1.getValue());
-        SmartDashboard.putNumber("Elevator Temperature", temp1.getValue());
-        SmartDashboard.putNumber("Elevator Speed (RPS)", RPS1.getValue());
+      BaseStatusSignal.refreshAll(current, temp, RPS );
+        SmartDashboard.putNumber("Elevator Current", current.getValue());
+        SmartDashboard.putNumber("Elevator Temperature", temp.getValue());
+        SmartDashboard.putNumber("Elevator Speed (RPS)", RPS.getValue());
     }
     public void setVelocity(double velocity, double ratio) {
         leftShooterMotor.setControl(leftRequestVelocity.withVelocity(Conversions.MPStoRPS(velocity, Constants.shooterConstants.wheelCircumferenceMeters, 1.0)));
@@ -78,7 +80,7 @@ public class shooter {
     }
 
     public void setVoltage(double voltage) {
-        rightShooterMotor.setControl(new Follower(leftMotor.getDeviceID(), true));
+        rightShooterMotor.setControl(new Follower(leftShooterMotor.getDeviceID(), true));
         leftShooterMotor.setControl(shootRequestVoltage.withOutput(voltage));
 }
 }
